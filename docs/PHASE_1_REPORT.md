@@ -20,3 +20,15 @@
 - El puerto 8000 estaba ocupado; se utiliza 8765 para las verificaciones reales.
 - El aislamiento del entorno impide sockets y bloquea TestClient; las pruebas y
   el servidor se ejecutan con permisos aprobados, solo en loopback.
+
+- Commit F1-02: `fe05304`.
+
+## F1-03 — DONE
+
+- Archivos: `models.py`, Alembic/env/plantilla/revisión 0001, fixtures, pruebas
+  de modelo y `docs/DATA_MODEL.md`.
+- PASS: `alembic upgrade head`, `alembic current`: `0001 (head)`.
+- PASS: suite completa: **10 passed**, 1 aviso de Starlette/httpx.
+- PASS: migración desde vacío, downgrade/upgrade/reaplicación, `alembic check`,
+  UUID, UTC, claves foráneas, correo único, restricciones y reapertura de SQLite.
+- PASS: `ruff check backend scripts migrations`.
