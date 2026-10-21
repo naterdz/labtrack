@@ -32,3 +32,17 @@
 - PASS: migración desde vacío, downgrade/upgrade/reaplicación, `alembic check`,
   UUID, UTC, claves foráneas, correo único, restricciones y reapertura de SQLite.
 - PASS: `ruff check backend scripts migrations`.
+
+- Commit F1-03: `178e0a0`.
+
+## F1-04 — DONE
+
+- Archivos: `api/auth.py`, `core/security.py`, `schemas/auth.py`, manejadores
+  de errores, integración en `main.py`, `test_auth.py` y `docs/API.md`.
+- PASS: suite completa: **27 passed**, 1 aviso de Starlette/httpx.
+- PASS: registro/correo normalizado/duplicados, hash Argon2id, login/me/logout,
+  cookies HttpOnly/SameSite/Secure, rotación y expiración de sesión.
+- PASS: 401 sin sesión o credenciales incorrectas; 403 sin CSRF, con nonce
+  sustituido o con Origin ajeno; 422 sin revelar contraseñas.
+- PASS: cuenta utilizable tras reiniciar la aplicación sobre la misma SQLite.
+- PASS: `ruff check backend scripts migrations`.
