@@ -1,0 +1,16 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["../"]
+addopts = "--strict-markers"
+markers = ["f1: contrato transitorio del hito F1; actualizar por endpoint al implementar F2"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/api/*.py" = ["B008"]
+"app/core/security.py" = ["B008"]
