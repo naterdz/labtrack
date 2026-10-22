@@ -1,4 +1,4 @@
-# LabTrack · F1
+# LabTrack · F2 en validación
 
 Base independiente del taller: FastAPI, SQLAlchemy 2, Pydantic 2 y frontend nativo.
 Requiere Python 3.12. No hay publicación externa ni repositorio remoto.
@@ -52,11 +52,25 @@ uv no necesita pip: usar `uv pip sync` como arriba o el ejecutable local de uv.
 
 ## Alcance
 
-F1 implementa salud, modelos/migración y autenticación; proyectos y experimentos
-quedan pendientes con HTTP 501 intencional. Los contadores no muestran cifras inventadas.
-CRUD, filtros y resumen corresponden a F2; Docker/PostgreSQL y CI a F3.
-El campo experimental `status` no forma parte de los modelos.
+Implementa autenticación, CRUD de proyectos y experimentos, permisos por dueño,
+filtros por modelo/búsqueda, paginación y resumen privado. El dashboard consume
+la API y permite crear, editar y eliminar registros con confirmación.
+No se carga información demo automáticamente.
 
+F2-01 a F2-03 están integradas en develop; F2-04 se conserva en su rama feature
+hasta completar el smoke de navegador. F2 no está liberada: el aislamiento actual
+bloquea sockets y no dispone de Chromium. Ver `docs/PHASE_2_REPORT.md`.
+Docker/PostgreSQL y CI corresponden a F3. El campo experimental `status` no forma
+parte de los modelos.
+
+En este entorno restringido se pueden ejecutar las mismas aserciones de pytest con:
+
+```bash
+.venv/bin/python scripts/test_sandbox.py -q backend/tests
+```
+
+Este ejecutor limita la espera de epoll para resolver el bloqueo de wakeups entre
+hilos de TestClient. En un equipo normal usar pytest directamente.
 Ver `docs/GIT_WORKFLOW.md` para ramas y liberaciones.
 
 La API de F1 y las cookies están descritas en `docs/API.md`; el modelo y la

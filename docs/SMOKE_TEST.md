@@ -1,23 +1,39 @@
-# Comprobación del hito F1
+# Comprobación de UI · F2
 
-La prueba automatizada `scripts/verify_browser.py` utiliza Chromium real, servidor
-temporal en loopback y SQLite temporal migrada. No usa respuestas simuladas.
+Estado actual: **NOT_RUN por bloqueo del entorno**. La ejecución real de
+`.venv/bin/python scripts/verify_browser.py` falla al crear el socket temporal
+con `PermissionError: [Errno 1] Operation not permitted`. Tampoco hay Chromium/
+Playwright instalado; registry.npmjs.org no se resuelve desde este aislamiento.
+No se reutilizan las capturas ni los resultados históricos de F1 como prueba de F2.
 
-1. Abrir la página y acceder al enlace de salto con Tab/Enter.
-2. Cambiar a crear cuenta y registrar un correo nuevo con contraseña de 12–128 caracteres.
-3. Comprobar que vuelve al login y limpia la contraseña.
-4. Intentar login incorrecto y comprobar mensaje visible; después usar la contraseña correcta.
-5. Verificar correo de la sesión, foco en el encabezado y contadores sin datos ficticios.
-6. Probar Nuevo proyecto: el cliente envía CSRF y la API responde HTTP 501 deliberado.
-7. Recargar: la sesión se conserva; cerrar sesión elimina cookies y sobrevive a otra recarga.
-8. Revisar login/panel a 1366px y 390px; panel también a 320px, sin desbordamiento global.
+## Ejecución automática pendiente
 
-Capturas: `artifacts/auth_desktop.png`, `auth_mobile.png`, `dashboard_desktop.png`
-y `dashboard_mobile.png`. Resultados: `artifacts/browser_smoke.json`.
-Los artefactos son locales e ignorados por Git. Se realizó revisión visual de
-las capturas de escritorio y móvil. Esta comprobación cubre F1, no CRUD de F2.
+En un entorno con loopback habilitado, Node y Playwright/Chromium:
 
-Para prueba manual, ejecutar `./iniciar.sh` y seguir los mismos pasos en
-http://127.0.0.1:8765. Las pruebas de pytest verifican por separado todas las
-diez rutas CRUD pendientes: 401 sin sesión, 403 sin CSRF para mutaciones y 501
-con sesión y token válidos.
+```bash
+npm install --prefix .tools/browser playwright
+./.tools/browser/node_modules/.bin/playwright install chromium
+PLAYWRIGHT_MODULE="$PWD/.tools/browser/node_modules/playwright" .venv/bin/python scripts/verify_browser.py
+```
+
+El script usa SQLite temporal migrada y un servidor en puerto libre; no toca
+la base local. `scripts/smoke_browser.cjs` ahora comprueba registro, login,
+creación de proyecto y experimento, filtro por modelo (con y sin coincidencias),
+edición, recarga, 409 al borrar proyecto con hijos, cancelación y confirmación
+de borrados, conteos y logout. Genera capturas de escritorio y móvil y reporte
+en `artifacts/`. Debe completarse y revisarse visualmente antes de liberar F2.
+
+## Revisión manual pendiente
+
+1. Registrar cuenta y entrar. Ver cero proyectos/experimentos.
+2. Crear proyecto con descripción y seleccionarlo.
+3. Crear experimento con dataset, modelo, notas y una métrica como 42.5.
+4. Filtrar por modelo sin distinguir mayúsculas; probar búsqueda y sin coincidencias.
+5. Editar proyecto y experimento; recargar y comprobar persistencia.
+6. Intentar eliminar proyecto con experimento: mostrar HTTP 409 y conservar datos.
+7. Cancelar eliminación; después confirmar borrado de experimento y proyecto.
+8. Comprobar conteos y logout; recargar sin sesión.
+9. Repetir con teclado y pantallas de 1366, 390 y 320 px; revisar foco de diálogos,
+   labels, texto largo y scroll interno de tabla. Los nombres deben verse como texto.
+
+Las pruebas de API y la revisión de sintaxis JavaScript no sustituyen esta revisión.
