@@ -1,4 +1,4 @@
-# LabTrack · F1
+# LabTrack · F2
 
 Base independiente del taller: FastAPI, SQLAlchemy 2, Pydantic 2 y frontend nativo.
 Requiere Python 3.12. No hay publicación externa ni repositorio remoto.
@@ -52,11 +52,33 @@ uv no necesita pip: usar `uv pip sync` como arriba o el ejecutable local de uv.
 
 ## Alcance
 
-F1 implementa salud, modelos/migración y autenticación; proyectos y experimentos
-quedan pendientes con HTTP 501 intencional. Los contadores no muestran cifras inventadas.
-CRUD, filtros y resumen corresponden a F2; Docker/PostgreSQL y CI a F3.
-El campo experimental `status` no forma parte de los modelos.
+Implementa autenticación, CRUD de proyectos y experimentos, permisos por dueño,
+filtros por modelo/búsqueda, paginación y resumen privado. El dashboard consume
+la API y permite crear, editar y eliminar registros con confirmación.
+No se carga información demo automáticamente.
 
+F2 completa: 65 pruebas aprobadas y smoke Chromium con 14 comprobaciones.
+Entrega local `v0.2.0`; evidencia y commits en `docs/PHASE_2_REPORT.md`.
+Docker/PostgreSQL y CI corresponden a F3. El campo experimental `status` no forma
+parte de los modelos.
+
+La suite se ejecuta con pytest normal. `scripts/test_sandbox.py` conserva el
+adaptador de diagnóstico usado durante un aislamiento anterior; no es necesario
+en el entorno actual.
+
+## Datos de demostración (opcionales)
+
+Después de aplicar migraciones, con `APP_ENV=development`:
+
+```bash
+.venv/bin/python -m scripts.seed_demo --email tu@ejemplo.com
+```
+
+Solicita la contraseña sin mostrarla ni guardarla en el historial. Crea una cuenta
+si no existe y un proyecto con dos experimentos de ejemplo. Para una cuenta
+existente verifica su contraseña. Repetir el comando conserva la demo existente;
+no modifica otros proyectos ni cambia contraseñas. Rechaza test/production.
+No se ejecuta al arrancar la aplicación.
 Ver `docs/GIT_WORKFLOW.md` para ramas y liberaciones.
 
 La API de F1 y las cookies están descritas en `docs/API.md`; el modelo y la

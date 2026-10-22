@@ -15,7 +15,7 @@
   <header class="topbar">
     <a class="brand" href="/" aria-label="LabTrack, inicio"><span class="brand-mark" aria-hidden="true">L<span>t</span></span>LabTrack<span class="brand-dot">.</span></a>
     <span class="topbar-caption">UN ESPACIO PARA TUS IDEAS</span>
-    <span class="phase-badge"><span aria-hidden="true"></span>Etapa inicial</span>
+    <span class="phase-badge"><span aria-hidden="true"></span>Mi laboratorio</span>
   </header>
   <main id="main-content">
     <div id="loading" class="loading" role="status">Preparando tu espacio…</div>
@@ -65,18 +65,31 @@
         <div class="workspace-heading"><div><p class="eyebrow">PANORAMA GENERAL</p><h1 id="dashboard-title" tabindex="-1">Tus ideas,<br class="mobile-break"> <em>en progreso.</em></h1><p class="muted">Un lugar para seguir el hilo de tu investigación.</p></div><span class="workspace-symbol" aria-hidden="true">✳</span></div>
         <div id="workspace-message" class="notice pending-notice" role="status" hidden></div>
         <div class="stat-grid" aria-label="Resumen de actividad">
-          <article class="stat-card"><span class="stat-label">Proyectos<span aria-hidden="true">▤</span></span><strong aria-label="Conteo no disponible">—</strong><p>Disponible en la próxima etapa</p></article>
-          <article class="stat-card"><span class="stat-label">Experimentos<span aria-hidden="true">⌁</span></span><strong aria-label="Conteo no disponible">—</strong><p>Disponible en la próxima etapa</p></article>
+          <article class="stat-card"><span class="stat-label">Proyectos<span aria-hidden="true">▤</span></span><strong id="projects-count">—</strong><p>En tu espacio de investigación</p></article>
+          <article class="stat-card"><span class="stat-label">Experimentos<span aria-hidden="true">⌁</span></span><strong id="experiments-count">—</strong><p>Registrados en tus proyectos</p></article>
           <article class="stat-card stat-note"><span class="eyebrow">PASO A PASO</span><h2>Una idea hoy.<br>Un hallazgo mañana.</h2><span class="note-arrow" aria-hidden="true">↗</span></article>
         </div>
         <div class="project-grid">
-          <section class="panel project-panel" aria-labelledby="projects-title"><div class="panel-heading"><h2 id="projects-title">Proyectos</h2><button id="refresh-projects" class="text-button" type="button">Actualizar</button></div><div class="project-empty"><span class="empty-icon" aria-hidden="true">▤</span><h3>Un nuevo comienzo</h3><p>La creación de proyectos llegará en la siguiente etapa.</p><button id="new-project" class="button secondary" type="button"><span aria-hidden="true">＋</span>Nuevo proyecto</button></div></section>
-          <section class="panel experiments-panel" aria-labelledby="experiments-title"><div class="panel-heading"><div><p class="eyebrow">EXPLORA TUS RESULTADOS</p><h2 id="experiments-title">Experimentos</h2></div><button class="button secondary compact" type="button" disabled aria-describedby="experiments-hint">＋ Nuevo experimento</button></div><div class="filter-row"><label for="model-filter">Modelo</label><select id="model-filter" disabled aria-describedby="experiments-hint"><option>Todos los modelos</option></select></div><div class="table-scroll"><table><caption class="sr-only">Experimentos del proyecto seleccionado</caption><thead><tr><th scope="col">Experimento / Dataset</th><th scope="col">Modelo</th><th scope="col">Métrica</th><th scope="col">Acciones</th></tr></thead><tbody><tr><td colspan="4"><div class="experiment-empty"><span aria-hidden="true">⌁</span><h3>Aquí tomarán forma tus pruebas.</h3><p id="experiments-hint">Los experimentos estarán disponibles junto con tus proyectos.</p></div></td></tr></tbody></table></div></section>
+          <section class="panel project-panel" aria-labelledby="projects-title">
+            <div class="panel-heading"><h2 id="projects-title">Proyectos</h2><button id="refresh-projects" class="text-button" type="button">Actualizar</button></div>
+            <div class="project-controls"><label for="project-select">Seleccionar proyecto</label><select id="project-select"></select><button id="new-project" class="button secondary" type="button">＋ Nuevo proyecto</button></div>
+            <div id="project-detail" class="project-controls"><h3 id="selected-project-name"></h3><p id="selected-project-description"></p><button id="edit-project" class="text-button" type="button">Editar proyecto</button><button id="delete-project" class="text-button" type="button">Eliminar proyecto</button></div>
+          </section>
+          <section class="panel experiments-panel" aria-labelledby="experiments-title">
+            <div class="panel-heading"><div><p class="eyebrow">EXPLORA TUS RESULTADOS</p><h2 id="experiments-title">Experimentos</h2></div><button id="new-experiment" class="button secondary compact" type="button" disabled>＋ Nuevo experimento</button></div>
+            <form id="filters" class="filter-row"><label for="model-filter">Modelo</label><input id="model-filter" maxlength="120" placeholder="Todos los modelos"><label for="search-filter">Buscar</label><input id="search-filter" maxlength="4000" type="search" placeholder="Nombre, dataset o notas"><button class="button secondary" type="submit">Filtrar</button></form>
+            <div class="table-scroll"><table><caption class="sr-only">Experimentos del proyecto seleccionado</caption><thead><tr><th scope="col">Experimento / Dataset</th><th scope="col">Modelo</th><th scope="col">Métrica</th><th scope="col">Acciones</th></tr></thead><tbody id="experiment-rows"></tbody></table></div>
+            <div class="pagination"><button id="previous-page" class="text-button" type="button">Anterior</button><span id="page-label" aria-live="polite"></span><button id="next-page" class="text-button" type="button">Siguiente</button></div>
+          </section>
         </div>
         <footer class="workspace-footer"><span>LabTrack · Cada paso cuenta.</span><span>Tu investigación, en un mismo lugar.</span></footer>
       </div>
     </section>
   </main>
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="editor-form"><h2 id="editor-title"></h2><div id="editor-fields"></div><p id="editor-error" class="notice error" role="alert" hidden></p><div class="dialog-actions"><button id="cancel-editor" class="button secondary" type="button">Cancelar</button><button id="save-editor" class="button primary" type="submit">Guardar</button></div></form>
+  </dialog>
+  <dialog id="confirmation" aria-labelledby="confirmation-title"><h2 id="confirmation-title">Confirmar eliminación</h2><p id="confirmation-text"></p><div class="dialog-actions"><button id="cancel-delete" class="button secondary" type="button">Cancelar</button><button id="confirm-delete" class="button primary" type="button">Eliminar</button></div></dialog>
   <noscript><p class="notice error">Activa JavaScript para acceder a LabTrack.</p></noscript>
 </body>
 </html>
