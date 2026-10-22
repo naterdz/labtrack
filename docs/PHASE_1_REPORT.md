@@ -46,3 +46,21 @@
   sustituido o con Origin ajeno; 422 sin revelar contraseñas.
 - PASS: cuenta utilizable tras reiniciar la aplicación sobre la misma SQLite.
 - PASS: `ruff check backend scripts migrations`.
+
+- Commit F1-04: `9e63773`.
+
+## F1-05 — DONE
+
+- Archivos: interfaz HTML/CSS/JS, icono SVG, rutas stub protegidas, integración
+  de estáticos, pruebas de recursos y scripts de arranque/smoke de navegador.
+- PASS: suite completa: **29 passed**, 1 aviso de Starlette/httpx.
+- PASS: `node --check` en ambos módulos JS y el script de navegador.
+- PASS: Chromium real: registro -> login fallido -> login válido -> dashboard
+  -> POST proyecto con CSRF y 501 -> recarga -> logout -> recarga sin sesión.
+- PASS: enlace de salto por teclado, labels, foco de dashboard y controles de contraseña.
+- PASS: login/dashboard sin desbordamiento global en escritorio y móvil;
+  dashboard también verificado a 320px. Tabla móvil con scroll interno.
+- PASS: capturas revisadas visualmente; no hay datos ni contadores simulados.
+- PASS: no hay excepciones JavaScript. Informe de navegador: `artifacts/browser_smoke.json`.
+- El navegador MCP no comparte el loopback del equipo (404), por lo que se
+  verificó con Chromium/Playwright local contra una base temporal independiente.
