@@ -92,3 +92,9 @@ def test_schema_and_migration_round_trip(database_url):
     for table in ["users", "projects", "experiments"]:
         assert "status" not in {c["name"] for c in schema.get_columns(table)}
     engine.dispose()
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), -float("inf")])
+def test_nonfinite_metrics_are_rejected(value):
+    with pytest.raises(ValueError, match="finito"):
+        Experiment(name="E", dataset_name="D", model_name="M", metric_value=value)

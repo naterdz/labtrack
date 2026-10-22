@@ -1,66 +1,96 @@
-# Informe F1 — en ejecución
+# F1 · Fundamentos y autenticación
 
-## F1-01 — DONE
+Fecha: 21 de octubre de 2026 (America/Mexico_City).
+Entrega: `v0.1.0` · rama final: `develop` · estado de comprobaciones: **PASS**.
+El tag y el árbol limpio se comprueban después de integrar; véase el procedimiento
+al final y el acta local `artifacts/phase_1_release.json` generada tras liberar.
 
-- Archivos: `.gitignore`, `README.md`, carpetas base y `docs/GIT_WORKFLOW.md`.
-- Commit: `7b6f4d3`.
-- PASS: `git branch --list`, repositorio independiente y `git diff --check`.
-- PASS: árbol limpio tras integrar en `develop`.
+## Tareas y commits
 
-## F1-02 — DONE
+| Tarea | Estado | Commit/ref | Archivos principales | Verificación |
+| --- | --- | --- | --- | --- |
+| F1-01 · repositorio | DONE | `7b6f4d3` | `.gitignore`, `README.md`, carpetas y `docs/GIT_WORKFLOW.md` | Repo independiente, main/develop, diff correcto y árbol limpio tras integrar. |
+| F1-02 · entorno/API | DONE | `fe05304` | `requirements*`, `config.py`, `db.py`, `main.py`, `init_env.py`, pruebas | Python 3.12.15, entorno instalado, .env privado/idempotente, health 200; 3 pruebas pasaron. |
+| F1-03 · datos | DONE | `178e0a0` | `models.py`, Alembic/revisión 0001, fixtures, pruebas y `DATA_MODEL.md` | Migración, UUID/UTC, restricciones, relaciones y persistencia; 10 pruebas pasaron. |
+| F1-04 · autenticación | DONE | `9e63773` | `auth.py`, `security.py`, schemas, errores, pruebas y `API.md` | Registro/login/me/logout, Argon2id, cookies y CSRF; 27 pruebas pasaron. |
+| F1-05 · interfaz/stubs | DONE | `dcfd75a` | `frontend/`, rutas CRUD pendientes, pruebas, lanzador y scripts de navegador | Interfaz funcional con API real, responsive, teclado y errores visibles; 29 pruebas pasaron. |
+| F1-06 · cierre | DONE | `feature/f1-06-qa` | `test_foundation.py`, pruebas de métricas, informes y documentación | Suite final, navegador, lint, revisión Git y liberación conforme al gate. |
 
-- Archivos: configuración, aplicación/API de salud, conexión SQLAlchemy, dependencias,
-  script de configuración privada, pruebas de salud/configuración y README.
-- PASS: Python 3.12.15 local, dependencias exactas instaladas en `.venv`.
-- PASS: `python scripts/init_env.py`; archivo privado idempotente.
-- PASS: `python -m pytest -q backend/tests`: **3 passed**, 1 aviso de deprecación
-  de Starlette sobre httpx (sin fallas).
-- PASS: `ruff check backend` y formato.
-- PASS: `curl -i http://127.0.0.1:8765/api/health`: 200 y JSON esperado.
-- El puerto 8000 estaba ocupado; se utiliza 8765 para las verificaciones reales.
-- El aislamiento del entorno impide sockets y bloquea TestClient; las pruebas y
-  el servidor se ejecutan con permisos aprobados, solo en loopback.
+El hash de F1-06 se obtiene con `git rev-parse feature/f1-06-qa` y consta en
+el acta local de liberación; no se incrusta en su propio commit.
+Cada tarea se realizó en su rama feature y se integra con `--no-ff` tras pasar
+sus comprobaciones. Las ramas se conservan para revisión.
 
-- Commit F1-02: `fe05304`.
+## Comprobaciones ejecutadas
 
-## F1-03 — DONE
+| Comando/comprobación | Resultado | Evidencia |
+| --- | --- | --- |
+| `.venv/bin/python --version` | PASS | Python 3.12.15 instalado localmente; sistema sin cambios. |
+| `python scripts/init_env.py` | PASS | Genera SECRET_KEY sin mostrarla; .env 0600, idempotente. |
+| `python -m pytest -q backend/tests` | PASS | **59 passed, 1 warning**, 3.97 s en el gate final. |
+| `alembic upgrade head` / `alembic current` | PASS | SQLite local migrada a `0001 (head)`. |
+| `alembic check` | PASS | No new upgrade operations detected. |
+| Pruebas sobre SQLite temporal | PASS | Base vacía, downgrade/upgrade/reaplicación, FK, correo único, UUID y UTC; reapertura conserva datos. |
+| `ruff check backend scripts migrations` | PASS | All checks passed. |
+| `ruff format --check backend scripts migrations` | PASS | 26 archivos ya formateados. |
+| `node --check` en módulos y smoke | PASS | Sintaxis válida. |
+| `bash -n iniciar.sh` | PASS | Sintaxis válida del lanzador. |
+| `curl -i http://127.0.0.1:8765/api/health` | PASS | HTTP 200, `{"status":"ok","service":"labtrack"}`. |
+| `python scripts/verify_browser.py` | PASS | Chromium real, 13 comprobaciones; servidor y SQLite temporales. |
+| Revisión visual | PASS | Login y dashboard en escritorio/móvil; cuatro capturas locales. |
+| Revisión de Git y secretos | PASS | Sin clave real, .env, DB, entornos o artefactos rastreados; sin remoto. |
 
-- Archivos: `models.py`, Alembic/env/plantilla/revisión 0001, fixtures, pruebas
-  de modelo y `docs/DATA_MODEL.md`.
-- PASS: `alembic upgrade head`, `alembic current`: `0001 (head)`.
-- PASS: suite completa: **10 passed**, 1 aviso de Starlette/httpx.
-- PASS: migración desde vacío, downgrade/upgrade/reaplicación, `alembic check`,
-  UUID, UTC, claves foráneas, correo único, restricciones y reapertura de SQLite.
-- PASS: `ruff check backend scripts migrations`.
+La suite final cubre las diez rutas CRUD pendientes: 401 sin sesión; 403
+sin CSRF o con CSRF inválido en las seis mutaciones; 501 con sesión/CSRF válidos,
+sin insertar proyectos o experimentos. También cubre hashes, duplicados,
+credenciales incorrectas, firma/caducidad/rotación, origen ajeno, atributos de
+cookies, validación sin exponer contraseñas, recursos estáticos y esquema.
+En QA se añadió rechazo explícito de NaN/infinito para evitar su conversión a
+NULL por SQLite; se conservan métricas finitas fuera de 0..1.
 
-- Commit F1-03: `178e0a0`.
+El navegador probó registro -> error de login -> login -> panel -> POST con CSRF
+-> recarga -> logout -> recarga sin sesión. Se comprobó foco, enlace de salto,
+contraseña no conservada, sesión HttpOnly y ausencia de excepciones JavaScript.
+No hay desbordamiento global a 1366px/390px ni en el panel a 320px; la tabla
+móvil tiene scroll interno. Los contadores muestran guiones y no hay datos demo.
 
-## F1-04 — DONE
+## Incidencias y decisiones
 
-- Archivos: `api/auth.py`, `core/security.py`, `schemas/auth.py`, manejadores
-  de errores, integración en `main.py`, `test_auth.py` y `docs/API.md`.
-- PASS: suite completa: **27 passed**, 1 aviso de Starlette/httpx.
-- PASS: registro/correo normalizado/duplicados, hash Argon2id, login/me/logout,
-  cookies HttpOnly/SameSite/Secure, rotación y expiración de sesión.
-- PASS: 401 sin sesión o credenciales incorrectas; 403 sin CSRF, con nonce
-  sustituido o con Origin ajeno; 422 sin revelar contraseñas.
-- PASS: cuenta utilizable tras reiniciar la aplicación sobre la misma SQLite.
-- PASS: `ruff check backend scripts migrations`.
+- Se creó `/home/natterdz/Downloads/labtrack`: no existía carpeta `Github`.
+  No se modificaron otros proyectos ni el JSON original.
+- Python del sistema: 3.14.4. Se instaló Python 3.12.15 en `.tools/python`
+  y dependencias exactas en `.venv`; ambos ignorados por Git.
+- La red y los sockets están bloqueados dentro del aislamiento. Descargas,
+  servidor local, TestClient y Chromium se ejecutaron con permisos aprobados.
+  Un intento inicial de pytest dentro del aislamiento se interrumpió al quedar
+  bloqueado; no se contó como PASS. Las ejecuciones válidas completaron normalmente.
+- El puerto 8000 estaba ocupado. Se verificó salud con curl en 8765 y el
+  navegador en un puerto temporal libre.
+- El navegador MCP no comparte el loopback del equipo (404). Se utilizó
+  Playwright/Chromium local y una base temporal independiente.
+- Starlette emite un aviso de deprecación sobre el uso de httpx en TestClient.
+  No hubo pruebas fallidas; se conserva httpx por el contrato de tecnología.
+- El gate del plan contiene el tag que autoriza crear. Se separó en gate técnico
+  previo y comprobación Git posterior, documentado en `GIT_WORKFLOW.md`.
+- Los informes se registraron en commits antes de liberar. Las expectativas 501
+  son específicas de F1 y deben actualizarse por endpoint al realizar F2.
+- Las sesiones son cookies firmadas sin revocación central; logout elimina las
+  cookies del navegador. Las copias previas vencen con su TTL. Detalle en `API.md`.
 
-- Commit F1-04: `9e63773`.
+## Liberación y acta posterior
 
-## F1-05 — DONE
+Tras aprobar el gate técnico: commit F1-06, merge a develop, merge a main,
+tag anotado `v0.1.0`, vuelta a develop y `merge --ff-only main`.
+Comprobar que main/develop/tag apuntan al mismo commit y `git status --short`
+no produce salida. El resultado real se registra en `artifacts/phase_1_release.json`
+(después de crear el tag, sin autorreferencia ni cambios al contenido etiquetado).
 
-- Archivos: interfaz HTML/CSS/JS, icono SVG, rutas stub protegidas, integración
-  de estáticos, pruebas de recursos y scripts de arranque/smoke de navegador.
-- PASS: suite completa: **29 passed**, 1 aviso de Starlette/httpx.
-- PASS: `node --check` en ambos módulos JS y el script de navegador.
-- PASS: Chromium real: registro -> login fallido -> login válido -> dashboard
-  -> POST proyecto con CSRF y 501 -> recarga -> logout -> recarga sin sesión.
-- PASS: enlace de salto por teclado, labels, foco de dashboard y controles de contraseña.
-- PASS: login/dashboard sin desbordamiento global en escritorio y móvil;
-  dashboard también verificado a 320px. Tabla móvil con scroll interno.
-- PASS: capturas revisadas visualmente; no hay datos ni contadores simulados.
-- PASS: no hay excepciones JavaScript. Informe de navegador: `artifacts/browser_smoke.json`.
-- El navegador MCP no comparte el loopback del equipo (404), por lo que se
-  verificó con Chromium/Playwright local contra una base temporal independiente.
+## Pendientes fuera de F1
+
+- F2: CRUD real, autorización por dueño, filtros, regla HTTP 409, resumen y UI completa.
+- F3: PostgreSQL/Docker, persistencia de contenedores, CI y guía de despliegue.
+- NOT_RUN: Docker/PostgreSQL, CI remota y despliegue; corresponden a otras fases.
+- No se agregó `status` a las entidades, no se creó remoto ni se hizo push.
+
+Próxima instrucción: «Ejecuta solo F2 del JSON; verifica primero F1 y v0.1.0».
+No se avanza a F2 automáticamente.
