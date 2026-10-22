@@ -1,12 +1,14 @@
 # Comprobación de UI · F2
 
-Estado actual: **NOT_RUN por bloqueo del entorno**. La ejecución real de
-`.venv/bin/python scripts/verify_browser.py` falla al crear el socket temporal
-con `PermissionError: [Errno 1] Operation not permitted`. Tampoco hay Chromium/
-Playwright instalado; registry.npmjs.org no se resuelve desde este aislamiento.
-No se reutilizan las capturas ni los resultados históricos de F1 como prueba de F2.
+Estado actual: **PASS**. Chromium real completó 14 comprobaciones contra servidor
+local y SQLite temporal: autenticación, CRUD, filtros, edición, 409, recarga,
+confirmaciones, foco/Escape y logout. Sin excepciones JavaScript ni overflow global
+a 1366, 390 y 320 px. Capturas de escritorio/móvil revisadas visualmente; se ajustaron
+selector, espaciado de acciones y tabla con scroll interno en móvil.
 
-## Ejecución automática pendiente
+El bloqueo anterior de sockets/DNS quedó resuelto al habilitar el entorno.
+Playwright está instalado en `.tools/browser` y Chromium en la caché local.
+## Ejecución automática
 
 En un entorno con loopback habilitado, Node y Playwright/Chromium:
 
@@ -21,9 +23,9 @@ la base local. `scripts/smoke_browser.cjs` ahora comprueba registro, login,
 creación de proyecto y experimento, filtro por modelo (con y sin coincidencias),
 edición, recarga, 409 al borrar proyecto con hijos, cancelación y confirmación
 de borrados, conteos y logout. Genera capturas de escritorio y móvil y reporte
-en `artifacts/`. Debe completarse y revisarse visualmente antes de liberar F2.
+en `artifacts/`. Las capturas se revisan visualmente al cambiar la interfaz.
 
-## Revisión manual pendiente
+## Recorrido verificado
 
 1. Registrar cuenta y entrar. Ver cero proyectos/experimentos.
 2. Crear proyecto con descripción y seleccionarlo.
@@ -36,4 +38,4 @@ en `artifacts/`. Debe completarse y revisarse visualmente antes de liberar F2.
 9. Repetir con teclado y pantallas de 1366, 390 y 320 px; revisar foco de diálogos,
    labels, texto largo y scroll interno de tabla. Los nombres deben verse como texto.
 
-Las pruebas de API y la revisión de sintaxis JavaScript no sustituyen esta revisión.
+Resultados locales: `artifacts/browser_smoke.json` y cuatro capturas PNG, ignorados por Git.

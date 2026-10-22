@@ -1,8 +1,8 @@
 # F2 · CRUD y dashboard funcional
 
-Fecha: 2026-10-21. Estado: **BLOCKED en validación de navegador**.
+Fecha: 2026-10-21. Estado: **PARTIAL; F2-04 verificada y F2-05 pendiente**.
 F1 confirmada mediante informe, tag `v0.1.0` y árbol inicial limpio.
-No se creó `v0.2.0`, no se fusionó F2 a main y no se hizo push.
+Aún no se creó `v0.2.0`; falta F2-05. No se hizo push.
 
 ## Tareas
 
@@ -81,3 +81,13 @@ No se creó `v0.2.0`, no se fusionó F2 a main y no se hizo push.
   "next_step": "Completar smoke y revisión visual F2 en un entorno con loopback y Chromium habilitados"
 }
 ```
+
+## Reanudación con permisos habilitados
+
+El bloqueo anterior está resuelto. Pytest normal: 61 passed, 1 warning en 6.42 s.
+Playwright/Chromium instalados localmente; smoke real PASS con 14 comprobaciones,
+servidor y SQLite temporales, cuatro capturas revisadas. Se ajustaron espaciados,
+filtros móviles y tabla con scroll interno; el lanzador usa python -m para evitar
+los shebangs del equipo anterior. F2-04 queda DONE y se integra antes de F2-05.
+Las marcas BLOCKED/NOT_RUN anteriores corresponden al primer intento y quedan
+sustituidas por esta evidencia de reanudación.

@@ -57,9 +57,8 @@ filtros por modelo/búsqueda, paginación y resumen privado. El dashboard consum
 la API y permite crear, editar y eliminar registros con confirmación.
 No se carga información demo automáticamente.
 
-F2-01 a F2-03 están integradas en develop; F2-04 se conserva en su rama feature
-hasta completar el smoke de navegador. F2 no está liberada: el aislamiento actual
-bloquea sockets y no dispone de Chromium. Ver `docs/PHASE_2_REPORT.md`.
+F2-01 a F2-04 verificadas: 61 pruebas de API y smoke Chromium con 14 comprobaciones.
+El cierre y tag de fase se documentan en `docs/PHASE_2_REPORT.md`.
 Docker/PostgreSQL y CI corresponden a F3. El campo experimental `status` no forma
 parte de los modelos.
 
