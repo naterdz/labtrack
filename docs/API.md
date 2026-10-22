@@ -46,3 +46,21 @@ leen ni modifican datos. Primero exigen sesión (401) y, en mutaciones, CSRF
 (403); con credenciales válidas devuelven 501. Se reemplazan por CRUD en F2.
 El resumen `/api/summary` y sus conteos reales se implementan en F2; en F1
 la ruta aún devuelve 404 y la UI muestra guiones, no ceros inventados.
+
+## F2 · API funcional
+
+Todas las rutas de proyectos y experimentos ya implementan CRUD. Crear devuelve
+201, PATCH devuelve 200 y DELETE devuelve 204 sin cuerpo. Los listados son arrays.
+Los campos desconocidos, nombres vacíos, PATCH vacío, null en campos obligatorios
+y métricas no finitas devuelven 422. PATCH conserva campos omitidos y permite
+limpiar campos opcionales mediante null. Los nombres se recortan.
+
+GET `/api/projects/{project_id}/experiments` acepta `model` (igualdad sin distinguir
+mayúsculas), `q` (subcadena literal sobre nombre, dataset, modelo o notas),
+`limit=20` (1..100) y `offset=0` (>=0). Orden estable por creación e id.
+Las búsquedas usan parámetros SQL y escapan comodines. GET `/api/summary` devuelve
+`projects_count` y `experiments_count` exclusivamente de la cuenta autenticada.
+
+Errores uniformes: `{code,message,details?}`. 401 sin sesión, 403 CSRF/origen
+inválido, 404 recurso inexistente o ajeno, 409 proyecto con experimentos (eliminar
+primero sus experimentos), 422 validación. Todas las mutaciones mantienen CSRF.

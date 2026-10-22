@@ -1,7 +1,7 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Response
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, Query, Response
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from backend.app.api.projects import owned_project
@@ -28,13 +28,35 @@ def owned_experiment(db, project_id, experiment_id, user):
 
 @router.get("", response_model=list[ExperimentResponse])
 def list_experiments(
-    project_id: UUID, user: User = Depends(current_user), db: Session = Depends(get_db)
+    project_id: UUID,
+    model: str | None = Query(None, max_length=120),
+    q: str | None = Query(None, max_length=4000),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
 ):
     owned_project(db, project_id, user)
+    query = select(Experiment).where(Experiment.project_id == project_id)
+    if model:
+        query = query.where(func.lower(Experiment.model_name) == model.strip().lower())
+    if q:
+        term = q.strip().lower()
+        query = query.where(
+            or_(
+                *[
+                    func.lower(column).contains(term, autoescape=True)
+                    for column in (
+                        Experiment.name,
+                        Experiment.dataset_name,
+                        Experiment.model_name,
+                        Experiment.notes,
+                    )
+                ]
+            )
+        )
     return db.scalars(
-        select(Experiment)
-        .where(Experiment.project_id == project_id)
-        .order_by(Experiment.created_at, Experiment.id)
+        query.order_by(Experiment.created_at, Experiment.id).offset(offset).limit(limit)
     ).all()
 
 

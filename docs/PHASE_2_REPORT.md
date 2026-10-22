@@ -15,3 +15,5 @@ Fuera de este aislamiento se usa `python -m pytest -q backend/tests`.
 | F2-02 | DONE | feature/f2-02-experiments | api/experiments.py, schemas/experiment.py, test_experiments.py, test_foundation.py | 26 passed; ruff PASS. CRUD, campos opcionales, PATCH, métricas finitas fuera de 0..1 y permisos en todas las rutas. |
 
 Se retiraron las expectativas 501 de F1 para las rutas ya implementadas.
+
+| F2-03 | DONE | feature/f2-03-summary | api/summary.py, api/experiments.py, main.py, test_filters_summary.py, docs/API.md | Prueba de filtros/resumen PASS; ruff PASS. Sin datos, dos usuarios, paginación, comodines literales e intento de inyección. |
