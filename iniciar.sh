@@ -7,5 +7,5 @@ if [[ ! -x .venv/bin/python ]]; then
   exit 1
 fi
 .venv/bin/python scripts/init_env.py
-.venv/bin/alembic upgrade head
-exec .venv/bin/uvicorn backend.app.main:create_app --factory --host 127.0.0.1 --port "${LABTRACK_PORT:-8765}"
+.venv/bin/python -m alembic upgrade head
+exec .venv/bin/python -m uvicorn backend.app.main:create_app --factory --host 127.0.0.1 --port "${LABTRACK_PORT:-8765}"
