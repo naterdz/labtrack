@@ -38,7 +38,7 @@ def test_all_pending_routes_require_authentication(client, method, path):
 
 
 @pytest.mark.f1
-@pytest.mark.parametrize("method,path", ROUTES)
+@pytest.mark.parametrize("method,path", [(m, p) for m, p in ROUTES if "experiments" in p])
 def test_all_pending_routes_return_explicit_501(client, method, path):
     headers = login(client)
     response = client.request(method, path, headers=headers)
@@ -62,7 +62,7 @@ def test_foundation_end_to_end_and_openapi(client):
     assert client.get("/api/health").json() == {"status": "ok", "service": "labtrack"}
     headers = login(client)
     assert client.get("/api/auth/me").json()["email"] == ACCOUNT["email"]
-    assert client.get("/api/projects").status_code == 501
+    assert client.get("/api/projects").status_code == 200
     assert client.post("/api/auth/logout", headers=headers).status_code == 204
     assert client.get("/api/auth/me").status_code == 401
     spec = client.get("/openapi.json").json()
