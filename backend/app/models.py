@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from math import isfinite
 from uuid import UUID, uuid4
 
 from sqlalchemy import CheckConstraint, DateTime, Float, ForeignKey, String, Text, Uuid
@@ -111,3 +112,9 @@ class Experiment(Base):
         UTCDateTime, default=utc_now, onupdate=utc_now, nullable=False
     )
     project: Mapped[Project] = relationship(back_populates="experiments")
+
+    @validates("metric_value")
+    def finite_metric(self, key, value):
+        if value is not None and not isfinite(value):
+            raise ValueError("La métrica debe ser un número finito")
+        return value
