@@ -51,7 +51,7 @@ def test_foundation_end_to_end_and_openapi(client):
     assert client.post("/api/auth/logout", headers=headers).status_code == 204
     assert client.get("/api/auth/me").status_code == 401
     spec = client.get("/openapi.json").json()
-    assert "/api/summary" not in spec["paths"]  # F2
+    assert "/api/summary" in spec["paths"]
     route = spec["paths"]["/api/projects/{project_id}/experiments/{experiment_id}"]["get"]
     assert {p["name"] for p in route["parameters"] if p["in"] == "path"} == {
         "project_id",
