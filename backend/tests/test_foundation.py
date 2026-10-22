@@ -1,9 +1,6 @@
 """Contrato transitorio F1: actualizar estas expectativas al implementar cada ruta en F2."""
 
 import pytest
-from backend.app.models import Experiment, Project
-from sqlalchemy import func, select
-from sqlalchemy.orm import Session
 
 PROJECT = "11111111-1111-4111-8111-111111111111"
 EXPERIMENT = "22222222-2222-4222-8222-222222222222"
@@ -35,18 +32,6 @@ def test_all_pending_routes_require_authentication(client, method, path):
     response = client.request(method, path)
     assert response.status_code == 401
     assert response.json()["code"] == "unauthenticated"
-
-
-@pytest.mark.f1
-@pytest.mark.parametrize("method,path", [(m, p) for m, p in ROUTES if "experiments" in p])
-def test_all_pending_routes_return_explicit_501(client, method, path):
-    headers = login(client)
-    response = client.request(method, path, headers=headers)
-    assert response.status_code == 501
-    assert response.json()["code"] == "not_implemented"
-    with Session(client.app.state.engine) as session:
-        assert session.scalar(select(func.count()).select_from(Project)) == 0
-        assert session.scalar(select(func.count()).select_from(Experiment)) == 0
 
 
 @pytest.mark.f1

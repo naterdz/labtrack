@@ -11,3 +11,7 @@ Pytest normal se bloquea en el portal de TestClient por los wakeups de sockets
 restringidos. `python scripts/test_sandbox.py` limita la espera de epoll a 10 ms,
 sin cambiar las aserciones ni la aplicación. Resultado real: 56 passed, 1 warning.
 Fuera de este aislamiento se usa `python -m pytest -q backend/tests`.
+
+| F2-02 | DONE | feature/f2-02-experiments | api/experiments.py, schemas/experiment.py, test_experiments.py, test_foundation.py | 26 passed; ruff PASS. CRUD, campos opcionales, PATCH, métricas finitas fuera de 0..1 y permisos en todas las rutas. |
+
+Se retiraron las expectativas 501 de F1 para las rutas ya implementadas.
