@@ -1,3 +1,6 @@
+> La sección F2 al final describe el comportamiento actual. Los 501 descritos
+> en la sección histórica de F1 solo corresponden al tag v0.1.0.
+
 # API · F1
 
 Mismo origen que la interfaz, prefijo `/api`. Todos los errores de aplicación

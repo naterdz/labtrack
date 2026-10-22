@@ -988,3 +988,28 @@ td {
     scroll-behavior:auto!important
   }
 }
+
+/* Formularios y controles del laboratorio */
+.project-controls { display: grid; gap: 12px; padding: 20px; min-width: 0; }
+.project-controls p, .project-controls h3 { overflow-wrap: anywhere; margin: 0; }
+.project-controls select, .filter-row input { width: 100%; min-width: 0; }
+.filter-row { flex-wrap: wrap; gap: 10px; }
+.filter-row input { flex: 1 1 140px; }
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 16px; }
+dialog { border: 1px solid #d5ddd8; border-radius: 18px; padding: 28px; width: min(520px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow: auto; color: #173d37; background: #fffefa; }
+dialog::backdrop { background: #173d3780; }
+#editor-fields { display: grid; gap: 10px; }
+#editor-fields textarea { resize: vertical; min-height: 80px; width: 100%; border: 1px solid #bbc9c1; border-radius: 8px; padding: 10px; font: inherit; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 22px; }
+td { overflow-wrap: anywhere; }
+button:disabled { cursor: default; opacity: .5; }
+@media (max-width: 600px) { .panel-heading { flex-wrap: wrap; gap: 12px; } .dialog-actions { flex-wrap: wrap; } }
+.project-controls select { padding: 10px 12px; border: 1px solid #d5ddd8; border-radius: 8px; background: #fff; color: inherit; }
+.filter-row { display: grid; grid-template-columns: auto minmax(90px, 1fr) auto minmax(90px, 1fr) auto; align-items: center; }
+#experiment-rows td { padding: 16px 20px; font-size: 13px; }
+#experiment-rows td p { margin: 6px 0 0; color: #71837e; font-size: 12px; }
+#experiment-rows td:last-child { white-space: nowrap; }
+#experiment-rows td button { padding: 8px 4px; }
+#experiment-rows td button + button { margin-left: 10px; }
+@media (max-width: 600px) { .filter-row { grid-template-columns: 1fr; } }
+.experiments-panel table { min-width: 600px; }
