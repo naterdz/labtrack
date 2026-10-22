@@ -1,9 +1,11 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
-from backend.app.api import auth
-from backend.app.core.config import Settings
+from backend.app.api import auth, experiments, projects
+from backend.app.core.config import ROOT, Settings
 from backend.app.db import make_engine
 from backend.app.errors import install_error_handlers
 
@@ -22,6 +24,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.engine = engine
     install_error_handlers(app)
     app.include_router(auth.router)
+    app.include_router(projects.router)
+    app.include_router(experiments.router)
 
     @app.middleware("http")
     async def response_headers(request: Request, call_next):
@@ -40,5 +44,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/api/health")
     def health():
         return {"status": "ok", "service": "labtrack"}
+
+    @app.get("/", include_in_schema=False)
+    def index():
+        return FileResponse(ROOT / "frontend/index.html", headers={"Cache-Control": "no-store"})
+
+    app.mount("/static", StaticFiles(directory=ROOT / "frontend"), name="static")
 
     return app

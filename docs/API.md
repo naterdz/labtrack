@@ -34,6 +34,15 @@ Contraseñas con Argon2id. Sesión firmada con ItsDangerous y caducidad de 8 hor
 
 ## Contrato pendiente
 
-Los endpoints CRUD de proyectos y experimentos se incorporan como stubs durante
-F1 y se implementan en F2. Deben exigir sesión antes de responder 501; sus
-mutaciones deben exigir CSRF. El resumen y los conteos reales corresponden a F2.
+| Métodos | Ruta | Respuesta F1 con sesión/CSRF válidos |
+| --- | --- | --- |
+| GET, POST | `/api/projects` | 501 `not_implemented` |
+| GET, PATCH, DELETE | `/api/projects/{project_id}` | 501 `not_implemented` |
+| GET, POST | `/api/projects/{project_id}/experiments` | 501 `not_implemented` |
+| GET, PATCH, DELETE | `/api/projects/{project_id}/experiments/{experiment_id}` | 501 `not_implemented` |
+
+IDs de ruta UUID. Las diez rutas CRUD son stubs deliberados de F1; no crean,
+leen ni modifican datos. Primero exigen sesión (401) y, en mutaciones, CSRF
+(403); con credenciales válidas devuelven 501. Se reemplazan por CRUD en F2.
+El resumen `/api/summary` y sus conteos reales se implementan en F2; en F1
+la ruta aún devuelve 404 y la UI muestra guiones, no ceros inventados.
