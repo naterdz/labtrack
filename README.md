@@ -1,4 +1,4 @@
-# LabTrack · F2 en validación
+# LabTrack · F2
 
 Base independiente del taller: FastAPI, SQLAlchemy 2, Pydantic 2 y frontend nativo.
 Requiere Python 3.12. No hay publicación externa ni repositorio remoto.
@@ -57,19 +57,28 @@ filtros por modelo/búsqueda, paginación y resumen privado. El dashboard consum
 la API y permite crear, editar y eliminar registros con confirmación.
 No se carga información demo automáticamente.
 
-F2-01 a F2-04 verificadas: 61 pruebas de API y smoke Chromium con 14 comprobaciones.
-El cierre y tag de fase se documentan en `docs/PHASE_2_REPORT.md`.
+F2 completa: 65 pruebas aprobadas y smoke Chromium con 14 comprobaciones.
+Entrega local `v0.2.0`; evidencia y commits en `docs/PHASE_2_REPORT.md`.
 Docker/PostgreSQL y CI corresponden a F3. El campo experimental `status` no forma
 parte de los modelos.
 
-En este entorno restringido se pueden ejecutar las mismas aserciones de pytest con:
+La suite se ejecuta con pytest normal. `scripts/test_sandbox.py` conserva el
+adaptador de diagnóstico usado durante un aislamiento anterior; no es necesario
+en el entorno actual.
+
+## Datos de demostración (opcionales)
+
+Después de aplicar migraciones, con `APP_ENV=development`:
 
 ```bash
-.venv/bin/python scripts/test_sandbox.py -q backend/tests
+.venv/bin/python -m scripts.seed_demo --email tu@ejemplo.com
 ```
 
-Este ejecutor limita la espera de epoll para resolver el bloqueo de wakeups entre
-hilos de TestClient. En un equipo normal usar pytest directamente.
+Solicita la contraseña sin mostrarla ni guardarla en el historial. Crea una cuenta
+si no existe y un proyecto con dos experimentos de ejemplo. Para una cuenta
+existente verifica su contraseña. Repetir el comando conserva la demo existente;
+no modifica otros proyectos ni cambia contraseñas. Rechaza test/production.
+No se ejecuta al arrancar la aplicación.
 Ver `docs/GIT_WORKFLOW.md` para ramas y liberaciones.
 
 La API de F1 y las cookies están descritas en `docs/API.md`; el modelo y la

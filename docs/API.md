@@ -67,3 +67,11 @@ Las búsquedas usan parámetros SQL y escapan comodines. GET `/api/summary` devu
 Errores uniformes: `{code,message,details?}`. 401 sin sesión, 403 CSRF/origen
 inválido, 404 recurso inexistente o ajeno, 409 proyecto con experimentos (eliminar
 primero sus experimentos), 422 validación. Todas las mutaciones mantienen CSRF.
+
+## Verificación F2
+
+La suite incluye un recorrido integrado de dos sesiones independientes sobre la
+misma base: CRUD, filtros, 404 de recursos ajenos, 409 de proyecto con hijos y
+conteos propios. Las pruebas se ejecutan en SQLite temporal migrada. La carga
+opcional de `python -m scripts.seed_demo --email ...` solo está habilitada para
+desarrollo y nunca se ejecuta desde la API ni al iniciar el servidor.
